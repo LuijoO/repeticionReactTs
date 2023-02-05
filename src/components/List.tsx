@@ -1,10 +1,9 @@
+// aca estoy importando las definiciones de tipo y se lo estoy aplicando a la interfaz de Props
+import { Sub } from "../types"
+
 interface Props {
-    subs: Array<{
-        nick: string
-        avatar: string
-        subMonth: number
-        description?: string
-    }>
+  // y aca lo uso para que el tipado sea el mismo
+    subs: Array<Sub>
 }
 
 
