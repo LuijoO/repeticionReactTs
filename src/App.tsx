@@ -1,48 +1,40 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './App.css';
 import Form from './components/Form';
 import List from './components/List';
-
-interface Subs {
-  nick: string
-  avatar: string
-  subMonth: number
-  description?: string
-}
+// estoy trabajando con las definiciones de types en otro archivo y aca lo importo
+import { Sub, SubResponseFromApi} from './types';
 
 interface AppState {
-  sub: Array<Subs>
+  sub: Array<Sub>
   newSubNumber: number
 }
-
-const initiaState = [
-  {
-    nick: 'luijo',
-    avatar: 'https://i.pravatar.cc/150?u=luijo',
-    subMonth: 3,
-    description: 'Luijo es el creador de todo'
-  },
-  {
-    nick: 'Antonio',
-    avatar: 'https://i.pravatar.cc/150?u=antonio',
-    subMonth: 4
-  }
-]
 
 function App() {
   const [sub, setSub] = useState<AppState["sub"]>([])
   const [newSubNumber, setNewSubNumber] = useState<AppState["newSubNumber"]>(0)
+  const divRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    setSub(initiaState)
+    const fetchSubs = (): Promise<SubResponseFromApi> => {
+      return (
+      fetch('http://localhost:3000/subs')
+      .then(res => res.json())
+      )}
+      
   }, [])
-  
 
+  const handleNewSubs = (newSub: Sub): void => {
+    setSub(subs => [...sub, newSub])
+    setNewSubNumber(n => n + 1)
+  }
+  
   return (
-    <div className="App">
+    <div className="App" ref={divRef}>
+      <h2>New Subs {newSubNumber}</h2>
       <h1>midu subs</h1>
       <List subs={sub}/>
-      <Form />
+      <Form onNewSubs={handleNewSubs}/>
     </div>
 );
 
